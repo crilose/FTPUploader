@@ -7,8 +7,6 @@
                 $ftp_server = pulisciClient($_POST['ftp_server']);
                 $username = pulisciClient($_POST['username']);
                 $password = pulisciClient($_POST['password']);
-                
-                
                 $porta = $_POST['port'];
                 
                 if(checkDefault($ftp_server, 'ftp_server')&& checkDefault($username, 'username')&&checkDefault($password,'password'))

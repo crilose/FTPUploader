@@ -2,7 +2,7 @@
 
 function pulisciClient($content)
 {
-    return filter_var($content, FILTER_SANITIZE_STRING);
+    return filter_var(htmlspecialchars($content), FILTER_SANITIZE_STRING);
 
 }
 
