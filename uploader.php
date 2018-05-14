@@ -1,8 +1,11 @@
 <?php
-
+require("FTPClass.php");
 class Uploader{
     
     private $ftp_server,$username,$password,$porta;
+    
+    private $filename;
+    private $symfile;
     
     public function __construct($servername,$user,$pass,$port)
     {
@@ -11,6 +14,13 @@ class Uploader{
         $this->password = $pass;
         $this->porta = $port;
     }
+    
+    public function getFileData($file,$sym)
+    {
+        $this->filename = $file;
+        $this->symfile = $sym;
+    }
+    
     
     public function sanifica()
     {
@@ -26,26 +36,12 @@ class Uploader{
     
     public function upload()
     {
-        if ($this->sanifica()==true) {
-                                      $file = $_FILES['file']['tmp_name']; //nome file con percorso assoluto
-                                      $new_file = $_FILES['file']['name']; //nome file senza percorso
-                                      
-                                      //apertura connessione ftp
-                                      $conn = ftp_connect($this->ftp_server, $this->porta) or die ('Impossibile connettersi al server');
-                                      ftp_login($conn, $this->username, $this->password) or die ('username o password errati');
-                                      ftp_pasv($conn, true);
-                                      
-                                      //upload del file
-                                      $invia = ftp_put($conn, $new_file, $file, FTP_BINARY);
-                                      echo (!$invia) ? 'Upload fallito' : 'upload completato';
-                                      
-                                      //chiusura connessione
-                                      ftp_close($conn);
-                                      }
-                                        else
-                                      {
-                                        echo "<b>Inserire il file</b>";
-                                      }
+        if ($this->sanifica()==false) {
+            $fileclass = new FTPClass($this->filename,$this->symfile);
+            $fileclass->connect($this->ftp_server,$this->porta,$this->username,$this->password);
+            $fileclass->upload();
+            $fileclass->disconnect();
+        }                         
                 
     }
     
